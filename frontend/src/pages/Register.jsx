@@ -62,8 +62,8 @@ const Register = () => {
         <div className="parent-center">
             <section className="container">
                 <div>
-                    <h2 style={{ margin: "0.3em 0" }}>Register here</h2>
-                    <form onSubmit={handleSubmit}>
+                    <h2>Register here</h2>
+                    <form style={{margin:"1.5em 0"}} onSubmit={handleSubmit}>
                         <input type="text"
                             name="fullname"
                             placeholder="Full Name"
@@ -108,11 +108,11 @@ const Register = () => {
                             onChange={handleInput}
                             required="true"
                         />
-                        <button style={{ marginTop: "2em" }} type="submit">Register</button>
+                        <button style={{ marginTop: "0.5em" }} type="submit">Register</button>
 
                     </form>
                 </div>
-                <div style={{ display: "flex", flexDirection: "row", gap: "1em" }}>
+                <div style={{ display: "flex", flexDirection: "row", gap: "0.5em" }}>
                     <p>Already have an account</p>
                     <p className="bld"><Link className="li" to="/login">Login</Link></p>
                 </div>

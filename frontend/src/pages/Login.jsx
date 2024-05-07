@@ -74,32 +74,32 @@ const Login = () => {
         <div className="parent-center">
             <section className="container">
                 <div>
-                    <h2 style={{ margin: "0.3em 0" }}>Welcome back!</h2>
+                    <h2>Welcome back!</h2>
 
-                    <form onSubmit={handleSubmit}>
+                    <form style={{margin:"1.5em 0"}} onSubmit={handleSubmit}>
 
-                            <input type="text"
-                                name="email"
-                                placeholder="Email Address"
-                                autoComplete="off"
-                                value={user.email}
-                                onChange={handleInput}
-                                autoCapitalize="no"
-                            />
+                        <input type="text"
+                            name="email"
+                            placeholder="Email Address"
+                            autoComplete="off"
+                            value={user.email}
+                            onChange={handleInput}
+                            autoCapitalize="no"
+                        />
 
-                            <input type="password"
-                                name="password"
-                                placeholder="Password"
-                                autoComplete=" off"
-                                value={user.password}
-                                onChange={handleInput}
-                            />
-                            <button style={{ marginTop: "2em" }} type="submit">Login</button>
-                     
+                        <input type="password"
+                            name="password"
+                            placeholder="Password"
+                            autoComplete=" off"
+                            value={user.password}
+                            onChange={handleInput}
+                        />
+                        <button style={{ marginTop: "0.5em" }} type="submit">Login</button>
+
 
                     </form>
                 </div>
-                <div style={{display:"flex" , flexDirection:"row", gap:"1em"}}>
+                <div style={{ display: "flex", flexDirection: "row", gap: "0.5em", }}>
                     <p> Don't have an account</p>
                     <p className="bld"><Link className="li" to="/register">Register</Link></p>
                 </div>

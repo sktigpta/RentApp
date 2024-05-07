@@ -1,20 +1,43 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+
+main {
+  background-color: #f8f9fa;
+  height: calc(100vh - 3.5em);
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+}
+
+.main {
+  width: 95%;
+
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
 
 .parent-center {
   width: 100%;
-  height: 80vh;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .container {
-  padding: 1.5em;
+  padding: 2em;
   border: 1px solid #dadada;
   display: flex;
   flex-direction: column;
   border-radius: 1em;
-  font-family: "Roboto", sans-serif;
+  font-family: sans-serif;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
 }
 
@@ -22,7 +45,6 @@ form {
   display: flex;
   flex-direction: column;
 }
-
 
 
 input {
@@ -37,7 +59,7 @@ input {
   display: block;
   height: 2em;
   width: 15em;
-  margin-top: 1em;
+  margin-bottom: 1em;
 }
 
 input:hover {
@@ -45,7 +67,7 @@ input:hover {
 }
 
 input:focus {
-  border-color: #9147ff;
+  border-color: black;
   background: #fff;
 }
 
@@ -56,9 +78,93 @@ button {
   border-radius: 0.5em;
   cursor: pointer;
   transition: all 0.2s;
+  padding: 0 2em;
 }
 
 button:hover {
   background: #FFC100;
+}
 
+.bld {
+  font-weight: 600;
+}
+
+.li {
+  color: black;
+  text-decoration: none;
+}
+
+/* Navbar */
+
+header,
+nav {
+  width: 100%;
+  height: 3.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+nav {
+  width: 95%;
+  background-color: #fff;
+  justify-content: space-between;
+}
+
+.logo {
+  background-color: rgb(246, 246, 246);
+  width: 7%;
+  height: 3em;
+}
+
+.navlinks {
+  display: flex;
+  flex-direction: row;
+  width: 40%;
+  align-items: center;
+  justify-content: end;
+  gap: 1em;
+}
+
+.search {
+  width: 80%;
+  height: 3em;
+}
+
+.profile {
+  background-color: #ffe100;
+  width: 2.5em;
+  height: 2.5em;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* card and container  */
+
+.container-card {
+  margin-top: 1em;
+  border-radius: 1em;
+  padding: 1em;
+  width: 100%;
+  height: 4.5em;
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.032) 0px 5px 15px;
+  font-family: "Roboto", sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.container-card .card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.container-card .image {
+  width: 4em;
+  height: 4em;
+  background: #ffe10062;
+  border-radius: 50%;
 }

@@ -7,12 +7,14 @@ import { Logout } from "../pages/Logout"
 export const PageRoutes = () => {
     return (
         <>
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/logout" element={<Logout />} />
-            </Routes>
+            <div className="main">
+                <Routes>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/logout" element={<Logout />} />
+                </Routes>
+            </div>
         </>
     )
 }

@@ -1,13 +1,14 @@
 import React from "react";
 import { useAuth } from "../storeing-data/auth";
+import { Categories } from "../components/Categories";
 
 
 const Home = () => {
-  const { user, loading } = useAuth()
+  const { user } = useAuth()
 
   return (
     <>
-      {user.fullname}
+      <Categories />
     </>
   );
 };
