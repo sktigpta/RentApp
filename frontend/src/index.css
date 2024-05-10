@@ -31,14 +31,28 @@ main {
   justify-content: center;
 }
 
-.container {
+.container-z {
   padding: 2em;
   border: 1px solid #dadada;
   display: flex;
   flex-direction: column;
   border-radius: 1em;
   font-family: sans-serif;
+  background-color: #fff;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+
+  z-index: 100;
+}
+
+.container {
+  padding: 1em;
+  border: 1px solid #dadada;
+  display: flex;
+  flex-direction: column;
+  border-radius: 1em;
+  font-family: sans-serif;
+  background-color: #fff;
+  box-shadow: rgba(100, 100, 111, 0.037) 0px 7px 29px 0px;
 }
 
 form {
@@ -112,8 +126,8 @@ nav {
 }
 
 .logo {
-  background-color: rgb(246, 246, 246);
-  width: 7%;
+  background-color: rgb(208, 208, 208);
+  width: 5em;
   height: 3em;
 }
 
@@ -137,6 +151,11 @@ nav {
   height: 2.5em;
   border-radius: 50%;
   cursor: pointer;
+
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: end;
 }
 
 /* card and container  */

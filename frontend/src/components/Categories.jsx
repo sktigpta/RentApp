@@ -1,4 +1,4 @@
-let category = ["Bike", "Car", "Gas & Stoves", "Furniture", "Tent", "Camera", "generator", "Room", "Sound System"]
+let category = ["Furniture", "Car", "Electronics", "Watches", "Health", "Camera","Room", "Beauty"]
 
 export const Categories = () => {
     return (

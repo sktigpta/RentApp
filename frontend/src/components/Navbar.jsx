@@ -1,9 +1,17 @@
+import { useState } from "react";
 import { useAuth } from "../storeing-data/auth";
+import { NavMenu } from "./NavMenu";
+import { Link } from "react-router-dom";
 
 
 export const Navbar = () => {
 
+    const [menu, SetMenu] = useState()
     const { user, isLoggedIn } = useAuth();
+
+    const handelToggle = () => {
+        SetMenu(prevMenu => !prevMenu)
+    }
 
     return (
         <>
@@ -20,13 +28,24 @@ export const Navbar = () => {
                                 <div className="search">
 
                                 </div>
-                                <div className="profile">
+                                <div onClick={handelToggle} className="profile">
 
                                 </div>
+                                {menu ?
+                                    <>
+                                        <div style={{ marginTop: "9em" }}>
+                                            <div className="menu">
+                                                <NavMenu />
+                                            </div>
+                                        </div>
+                                    </>
+                                    :
+                                    null
+                                }
                             </>
                             :
                             <>
-                                <button>Login</button>
+                                <Link to="/login"><button>Login</button></Link>
                             </>}
                     </div>
                 </nav>

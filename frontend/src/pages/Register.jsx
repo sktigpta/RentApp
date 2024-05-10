@@ -45,11 +45,12 @@ const Register = () => {
             if (response.ok) {
 
                 setUser({ fullname: "", username: "", email: "", phone: "", password: "" });
-
-
+                alert("Registration Sucessful")
                 navigate("/login");
             } else {
-                const data = await response.json(); // Parse error response
+                const data = await response.json();
+                alert("Registration Failed")
+
             }
         } catch (error) {
             console.log(error);
@@ -63,7 +64,7 @@ const Register = () => {
             <section className="container">
                 <div>
                     <h2>Register here</h2>
-                    <form style={{margin:"1.5em 0"}} onSubmit={handleSubmit}>
+                    <form style={{ margin: "1.5em 0" }} onSubmit={handleSubmit}>
                         <input type="text"
                             name="fullname"
                             placeholder="Full Name"

@@ -51,12 +51,15 @@ const Login = () => {
                 storeTokeninLocalMem(res_data.token);
 
                 setUser({ email: "", password: "", })
+                alert("Login Sucessful")
                 navigate("/")
 
 
 
             } else {
                 const data = await response.json();
+                alert("Login Failed")
+
             }
 
 
@@ -76,7 +79,7 @@ const Login = () => {
                 <div>
                     <h2>Welcome back!</h2>
 
-                    <form style={{margin:"1.5em 0"}} onSubmit={handleSubmit}>
+                    <form style={{ margin: "1.5em 0" }} onSubmit={handleSubmit}>
 
                         <input type="text"
                             name="email"
