@@ -1,5 +1,6 @@
-const User = require('../modals/user-model')
+const User = require('../modals/userModel')
 const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken');
 const fs = require('fs');
 
 
@@ -46,7 +47,8 @@ const register = async (req, res) => {
 
     } catch (error) {
         // Internal server error
-        return res.status(500).json({ message: "Internal Server Error" });
+        console.log(error);
+        return res.status(500).json({ message: "Internal Server Error "});
     }
 };
 

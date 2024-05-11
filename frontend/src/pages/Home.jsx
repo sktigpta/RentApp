@@ -1,7 +1,6 @@
 import React from "react";
 import { useAuth } from "../storeing-data/auth";
 import { Categories } from "../components/Categories";
-import { HomeCard } from "../components/HomeCard";
 
 
 const Home = () => {
@@ -9,8 +8,17 @@ const Home = () => {
 
   return (
     <>
-      <Categories />
-      <HomeCard/>
+      <div className="home-hero">
+        <section className="UBDSCJYH">
+
+        </section>
+        <section>
+
+        </section>
+        <section>
+
+        </section>
+      </div>
     </>
   );
 };

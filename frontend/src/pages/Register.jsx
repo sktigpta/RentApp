@@ -61,7 +61,7 @@ const Register = () => {
 
     return (<>
         <div className="parent-center">
-            <section className="container">
+            <section className="container-z">
                 <div>
                     <h2>Register here</h2>
                     <form style={{ margin: "1.5em 0" }} onSubmit={handleSubmit}>

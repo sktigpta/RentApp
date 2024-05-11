@@ -5,19 +5,18 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
-
+/* Base styles */
 main {
   background-color: #f8f9fa;
-  height: calc(100vh - 3.5em);
+  min-height: calc(100vh - 3.5em);
+  /* Adjusted min-height */
   width: 100%;
-
   display: flex;
   justify-content: center;
 }
 
 .main {
   width: 95%;
-
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -25,14 +24,15 @@ main {
 
 .parent-center {
   width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  height: calc(100% - 2em);
+  background: #000;
 }
 
 .container-z {
-  padding: 2em;
+  padding: 2em 1.5em;
   border: 1px solid #dadada;
   display: flex;
   flex-direction: column;
@@ -40,12 +40,14 @@ main {
   font-family: sans-serif;
   background-color: #fff;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
 
-  z-index: 100;
+.container-z input {
+  margin-bottom: 1em;
 }
 
 .container {
-  padding: 1em;
+  padding: 0.3em;
   border: 1px solid #dadada;
   display: flex;
   flex-direction: column;
@@ -53,13 +55,13 @@ main {
   font-family: sans-serif;
   background-color: #fff;
   box-shadow: rgba(100, 100, 111, 0.037) 0px 7px 29px 0px;
+  width: 30%;
 }
 
 form {
   display: flex;
   flex-direction: column;
 }
-
 
 input {
   font-size: 14px;
@@ -73,7 +75,6 @@ input {
   display: block;
   height: 2em;
   width: 15em;
-  margin-bottom: 1em;
 }
 
 input:hover {
@@ -125,53 +126,98 @@ nav {
   justify-content: space-between;
 }
 
-.logo {
-  background-color: rgb(208, 208, 208);
-  width: 5em;
-  height: 3em;
-}
-
-.navlinks {
-  display: flex;
-  flex-direction: row;
-  width: 40%;
-  align-items: center;
-  justify-content: end;
-  gap: 1em;
-}
-
-.search {
-  width: 80%;
-  height: 3em;
-}
-
-.profile {
-  background-color: #ffe100;
-  width: 2.5em;
+.navbar-logo {
   height: 2.5em;
-  border-radius: 50%;
-  cursor: pointer;
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
+.navbar-logo img {
+  width: 4em;
+}
+
+.navbar-profile {
+  border: none;
+  cursor: pointer;
+  width: 3em;
+  height: 3em;
+  overflow: hidden;
+  background: #ffe100;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.navbar-profile img {
+  margin-top: 0.5em;
+  height: 3em;
+
+}
+
+.navbar-profile button {
+  border: none;
+  cursor: pointer;
+}
+
+
+.profile-menu {
   position: absolute;
   display: flex;
   flex-direction: column;
-  align-items: end;
+  align-items: center;
+  margin-top: 2em;
+  right: 3%;
+  border-radius: 1em;
+  padding: 1em;
+  gap: 0.5em;
+  background: white;
+  border: 1px solid #dadada;
+  z-index: 100;
+  box-shadow: rgba(100, 100, 111, 0.174) 0px 7px 29px 0px;
+
+}
+
+.proLi {
+  width: 12em;
+  display: flex;
+  flex-direction: row;
+  padding: 0.7em 1em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: 0.2s all;
+  border-radius: 10px;
+  background: #ffe100;
+  gap: 0.6em;
+}
+
+.proLi:hover {
+  background: #FFC100;
+}
+
+.logOO {
+  background: #FFC100;
+}
+
+.logOO:hover {
+  background: rgba(255, 0, 0, 0.866);
 }
 
 /* card and container  */
 
 .container-card {
   margin-top: 1em;
-  border-radius: 1em;
-  padding: 1em;
   width: 100%;
-  height: 4.5em;
-  background-color: #fff;
-  box-shadow: rgba(0, 0, 0, 0.032) 0px 5px 15px;
   font-family: "Roboto", sans-serif;
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-evenly;
+  gap: 1em;
+  flex-wrap: wrap;
 }
 
 .container-card .card {
@@ -182,8 +228,44 @@ nav {
 }
 
 .container-card .image {
-  width: 4em;
-  height: 4em;
+  width: 100%;
+  height: 20em;
   background: #ffe10062;
-  border-radius: 50%;
+  border-radius: 0.8em;
+}
+
+.home-hero {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+.home-hero .UBDSCJYH{
+  width: 20%;
+  height: 20em;
+  background-color: #fff;
+  display: flex;
+  flex-direction: row;
+}
+
+
+
+
+
+/* Responsive for Tablets */
+@media screen and (max-width: 768px) {
+  .container {
+    height: 12em;
+  }
+}
+
+/* Responsive for Mobile Devices */
+@media screen and (max-width: 480px) {
+
+  .container {
+    width: 100%;
+  }
+
+  input {
+    width: 100%;
+  }
 }

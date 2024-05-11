@@ -75,7 +75,7 @@ const Login = () => {
 
     return (<>
         <div className="parent-center">
-            <section className="container">
+            <section className="container-z">
                 <div>
                     <h2>Welcome back!</h2>
 
