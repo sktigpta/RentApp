@@ -7,12 +7,14 @@ const jwt = require('jsonwebtoken');
 const userSchema = new Schema({
   username: { type: String, required: true },
   email: { type: String, required: true },
+  phone: { type: Number, required: true },
   password: { type: String, required: true },
   isBusiness: { type: Boolean, default: false },
   isAdmin: { type: Boolean, default: false },
   isMember: { type: Boolean, default: false },
   location: { type: Object },
-  createdAt: { type: Date, default: Date.now }
+  createdAt: { type: Date, default: Date.now },
+  profilePicture: { type: String, require: true, },
 });
 
 userSchema.pre('save', async function (next) {
