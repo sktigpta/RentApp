@@ -1,86 +1,145 @@
-const Business = require('../modals/businessModel')
-const User = require('../modals/userModel')
+const Business = require('../modals/businessModel');
+const Product = require('../modals/productModel');
+const fs = require('fs');
 
+// Controller to register a new business
 const register = async (req, res) => {
     try {
-        const { userId, businessName, businessAddress, } = req.body;
+        const { userId, businessName, businessAddress, businessDescription, businessCategories } = req.body;
 
-        // Check if email and username already exist
-        const emailExist = await User.findOne({ email });
+        // Check if business name already exists
         const businessExist = await Business.findOne({ businessName });
-
-        if (emailExist) {
-            return res.status(400).json({ message: "User already associated with anathor business" });
-        }
-
         if (businessExist) {
-            return res.status(400).json({ message: "Name not available" });
+            return res.status(400).json({ message: "Business name already exists" });
         }
 
-        // Create user
-        const userCreated = await User.create({
-            userId: userId,
+        // Create new business
+        const newBusiness = await Business.create({
+            userId,
             businessName,
             businessAddress,
-            businessDiscription,
-            BusinessCategories,
+            businessDescription,
+            businessCategories
         });
 
-        // Return success response
-        return res.status(201).json({
-            message: "Registration successful",
-        });
-
+        return res.status(201).json({ message: "Business registered successfully", business: newBusiness });
     } catch (error) {
-        // Internal server error
-        console.log(error);
-        return res.status(500).json({ message: "Internal Server Error " });
+        console.error("Error registering business:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
     }
 };
 
-
-const uploadProfilePicture = async (req, res) => {
+// Controller to upload a product for a business
+const uploadProduct = async (req, res) => {
     try {
-        const userId = req.body.userId;
-        const { email } = req.body;
+        const { businessId } = req.params;
+        const { name, description, pricePerDay, pricePerWeek, pricePerMonth, categories } = req.body;
 
-        const user = await User.findById(userId);
-
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+        // Find the business by ID
+        const business = await Business.findById(businessId);
+        if (!business) {
+            return res.status(404).json({ message: "Business not found" });
         }
 
-        if (email && email !== user.email) {
-            const existingUserWithEmail = await User.findOne({ email });
-            if (existingUserWithEmail && existingUserWithEmail._id.toString() !== userId) {
-                return res.status(400).json({ message: 'Email is already in use by another user' });
-            }
-        }
+        // Create new product
+        const newProduct = await Product.create({
+            businessId,
+            name,
+            description,
+            pricePerDay,
+            pricePerWeek,
+            pricePerMonth,
+            categories
+        });
 
-        if (!req.file) {
-            return res.status(400).json({ message: 'No file uploaded' });
-        }
-
-        const profilePicture = req.file.filename.replace(/\s+/g, '-');
-
-        // Delete old profile picture if it exists
-        if (user.profilePicture) {
-            const oldProfilePicturePath = `C:\\Users\\Shaktidhar gupta\\OneDrive\\Desktop\\4th-Sem\\server\\uploads\\ProfilePictures\\${user.profilePicture}`;
-
-            if (fs.existsSync(oldProfilePicturePath)) {
-                fs.unlinkSync(oldProfilePicturePath);
-            }
-        }
-
-        user.profilePicture = profilePicture;
-        await user.save();
-
-        return res.status(201).json({ message: 'Profile picture uploaded successfully' });
+        return res.status(201).json({ message: "Product uploaded successfully", product: newProduct });
     } catch (error) {
-        console.error('Error uploading profile picture:', error);
-        return res.status(500).json({ error: 'Failed to upload profile picture' });
+        console.error("Error uploading product:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
     }
 };
 
+// Controller to list all products of a business
+const listProducts = async (req, res) => {
+    try {
+        const { businessId } = req.params;
 
-module.exports = { register, }
+        // Find all products of the business
+        const products = await Product.find({ businessId });
+
+        return res.status(200).json({ products });
+    } catch (error) {
+        console.error("Error listing products:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
+// Controller to delete a product of a business
+const deleteProduct = async (req, res) => {
+    try {
+        const { businessId, productId } = req.params;
+
+        // Find the product by ID
+        const product = await Product.findById(productId);
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        // Check if the product belongs to the business
+        if (product.businessId.toString() !== businessId) {
+            return res.status(403).json({ message: "Unauthorized access" });
+        }
+
+        // Delete the product
+        await product.remove();
+
+        return res.status(200).json({ message: "Product deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting product:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
+// Controller to edit a product of a business
+const editProduct = async (req, res) => {
+    try {
+        const { businessId, productId } = req.params;
+        const { name, description, pricePerDay, pricePerWeek, pricePerMonth, categories } = req.body;
+
+        // Find the business by ID
+        const business = await Business.findById(businessId);
+        if (!business) {
+            return res.status(404).json({ message: "Business not found" });
+        }
+
+        // Find the product by ID
+        let product = await Product.findById(productId);
+
+        if (!product) {
+            return res.status(404).json({ message: "Product not found" });
+        }
+
+        // Check if the product belongs to the business
+        if (product.businessId.toString() !== businessId) {
+            return res.status(403).json({ message: "Unauthorized access" });
+        }
+
+        // Update product details
+        product.name = name;
+        product.description = description;
+        product.pricePerDay = pricePerDay;
+        product.pricePerWeek = pricePerWeek;
+        product.pricePerMonth = pricePerMonth;
+        product.categories = categories;
+
+        // Save the updated product
+        await product.save();
+
+        return res.status(200).json({ message: "Product updated successfully", product });
+    } catch (error) {
+        console.error("Error editing product:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
+module.exports = { register, uploadProduct, listProducts, deleteProduct, editProduct };

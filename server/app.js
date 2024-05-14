@@ -23,11 +23,13 @@ app.use(cors(corsOptions));
 // Require functions from other folders here
 const authRouter = require('./auth-router/auth-router');
 const adminRoute = require('./auth-router/admin-route');
+const businessRoute = require('./auth-router/business-route');
 const connectdb = require('./utils/db');
 
 // Apply middleware
 app.use("/api/auth", authRouter);
 app.use("/api/admin", adminRoute);
+app.use("/api/business", businessRoute);
 
 const server = http.createServer(app);
 const createSocketIoServer = require('./utils/socket');
