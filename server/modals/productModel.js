@@ -9,7 +9,7 @@ const productSchema = new Schema({
   pricePerDay: { type: Number },
   pricePerWeek: { type: Number },
   pricePerMonth: { type: Number },
-  categories: [{ type: Schema.Types.ObjectId, ref: 'Category' }], // Array of category IDs
+  categories: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
   createdAt: { type: Date, default: Date.now }
 });
 

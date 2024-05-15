@@ -1,3 +1,5 @@
+// server/middleware/business-middleware.js
+
 const businessMiddleware = async (req, res, next) => {
     try {
         const isBusiness = req.user.isBusiness;
@@ -12,4 +14,18 @@ const businessMiddleware = async (req, res, next) => {
     }
 };
 
-module.exports = businessMiddleware;
+const businessRegistration = async (req, res, next) => {
+    try {
+        const isBusiness = req.user.isBusiness;
+
+        if (isBusiness) {
+            return res.status(403).json({ message: "You are already registered as business" });
+        }
+
+        next();
+    } catch (error) {
+        next(error);
+    }
+};
+
+module.exports = { businessMiddleware, businessRegistration };

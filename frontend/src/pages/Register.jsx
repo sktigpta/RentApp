@@ -45,11 +45,12 @@ const Register = () => {
             if (response.ok) {
 
                 setUser({ fullname: "", username: "", email: "", phone: "", password: "" });
-                alert("Registration Sucessful")
+                alert('sucessful')
                 navigate("/login");
+
             } else {
                 const data = await response.json();
-                alert("Registration Failed")
+                alert(data.message)
 
             }
         } catch (error) {

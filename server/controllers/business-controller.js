@@ -1,11 +1,17 @@
 const Business = require('../modals/businessModel');
 const Product = require('../modals/productModel');
+const Category = require('../modals/categoryModel');
+const User = require('../modals/userModel');
 const fs = require('fs');
 
-// Controller to register a new business
 const register = async (req, res) => {
     try {
-        const { userId, businessName, businessAddress, businessDescription, businessCategories } = req.body;
+        const { businessName, businessAddress, businessDescription, businessPhone, businessCategories } = req.body;
+        const userId = req.userId;
+
+        if (!userId) {
+            return res.status(400).json({ message: "User ID is required" });
+        }
 
         // Check if business name already exists
         const businessExist = await Business.findOne({ businessName });
@@ -17,17 +23,28 @@ const register = async (req, res) => {
         const newBusiness = await Business.create({
             userId,
             businessName,
+            businessPhone,
             businessAddress,
             businessDescription,
             businessCategories
         });
 
+        // Update user's isBusiness field to true
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        user.isBusiness = true;
+        await user.save();
+
         return res.status(201).json({ message: "Business registered successfully", business: newBusiness });
     } catch (error) {
-        console.error("Error registering business:", error);
+        console.error("Error registering business:", error.message, error.stack);
         return res.status(500).json({ message: "Internal Server Error" });
     }
 };
+
 
 // Controller to upload a product for a business
 const uploadProduct = async (req, res) => {
@@ -35,10 +52,13 @@ const uploadProduct = async (req, res) => {
         const { businessId } = req.params;
         const { name, description, pricePerDay, pricePerWeek, pricePerMonth, categories } = req.body;
 
-        // Find the business by ID
-        const business = await Business.findById(businessId);
-        if (!business) {
-            return res.status(404).json({ message: "Business not found" });
+        // Convert category names to corresponding ObjectIds
+        const categoryIds = await Category.find({ name: { $in: categories } }).distinct('_id');
+
+        // Check if all categories were found
+        if (categories.length !== categoryIds.length) {
+            const notFoundCategories = categories.filter(category => !categoryIds.includes(category));
+            return res.status(400).json({ message: `Categories not found: ${notFoundCategories.join(', ')}` });
         }
 
         // Create new product
@@ -49,7 +69,7 @@ const uploadProduct = async (req, res) => {
             pricePerDay,
             pricePerWeek,
             pricePerMonth,
-            categories
+            categories: categoryIds
         });
 
         return res.status(201).json({ message: "Product uploaded successfully", product: newProduct });
@@ -58,6 +78,7 @@ const uploadProduct = async (req, res) => {
         return res.status(500).json({ message: "Internal Server Error" });
     }
 };
+
 
 // Controller to list all products of a business
 const listProducts = async (req, res) => {

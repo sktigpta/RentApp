@@ -51,14 +51,14 @@ const Login = () => {
                 storeTokeninLocalMem(res_data.token);
 
                 setUser({ email: "", password: "", })
-                alert("Login Sucessful")
                 navigate("/")
+                alert(data.message)
 
 
 
             } else {
                 const data = await response.json();
-                alert("Login Failed")
+                alert(data.message)
 
             }
 

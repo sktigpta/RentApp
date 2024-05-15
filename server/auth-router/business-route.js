@@ -1,9 +1,10 @@
-// businessRoutes.js
+// server/routes/business-route.js
 
 const express = require('express');
 const router = express.Router();
 const businessControllers = require("../controllers/business-controller");
-const businessMiddleware = require("../middleware/business-middleware");
+const { businessMiddleware, businessRegistration } = require("../middleware/business-middleware");
+const authMiddleware = require('../middleware/auth-middleware');
 const multer = require('multer');
 
 // Setup multer for file uploads
@@ -23,10 +24,10 @@ router.route("/").get((req, res) => {
     res.send("hey");
 });
 
-router.post("/register", businessMiddleware, businessControllers.register);
-router.post("/:businessId/upload-product", businessMiddleware, upload.single('productImage'), businessControllers.uploadProduct);
-router.get("/:businessId/products", businessMiddleware, businessControllers.listProducts);
-router.delete("/:businessId/delete-product/:productId", businessMiddleware, businessControllers.deleteProduct);
-router.put("/:businessId/edit-product/:productId", businessMiddleware, businessControllers.editProduct);
+router.post("/register", authMiddleware, businessRegistration, businessControllers.register);
+router.post("/:businessId/upload-product", authMiddleware, businessMiddleware, upload.single('productImage'), businessControllers.uploadProduct);
+router.get("/:businessId/products", businessControllers.listProducts);
+router.delete("/:businessId/delete-product/:productId", authMiddleware, businessMiddleware, businessControllers.deleteProduct);
+router.put("/:businessId/edit-product/:productId", authMiddleware, businessMiddleware, businessControllers.editProduct);
 
 module.exports = router;

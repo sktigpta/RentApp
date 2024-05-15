@@ -79,7 +79,6 @@ const login = async (req, res) => {
 
 
 // user API
-
 const user = async (req, res) => {
 
     try {
