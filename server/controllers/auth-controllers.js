@@ -1,15 +1,14 @@
-const User = require('../modals/userModel')
-const bcrypt = require('bcrypt')
+const User = require('../modals/userModel');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
+const axios = require('axios');
 
-//Registration API
-
+// Registration API
 const register = async (req, res) => {
     try {
         const { fullname, username, email, phone, password } = req.body;
 
-        // Check if email and username already exist
         const emailExist = await User.findOne({ email });
         const usernameExist = await User.findOne({ username });
 
@@ -21,7 +20,6 @@ const register = async (req, res) => {
             return res.status(400).json({ message: "Username not available" });
         }
 
-        // Create user
         const userCreated = await User.create({
             fullname,
             username,
@@ -30,29 +28,24 @@ const register = async (req, res) => {
             password,
         });
 
-        // Return success response
         return res.status(201).json({
             message: "Registration successful",
-            token: await userCreated.genetateToken(),
+            token: await userCreated.generateToken(),
             userID: userCreated._id.toString()
         });
 
     } catch (error) {
-        // Internal server error
         console.log(error);
-        return res.status(500).json({ message: "Internal Server Error " });
+        return res.status(500).json({ message: "Internal Server Error" });
     }
 };
 
-
-
-//Login API
-
+// Login API
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const userExist = await User.findOne({ email })
+        const userExist = await User.findOne({ email });
 
         if (!userExist) {
             return res.status(401).json({ message: "Invalid Credentials" });
@@ -63,38 +56,34 @@ const login = async (req, res) => {
         if (user) {
             return res.status(200).json({
                 message: "Login successful",
-                token: await userExist.genetateToken(),
+                token: await userExist.generateToken(),
                 userID: userExist._id.toString()
             });
         } else {
-            // Incorrect password
             return res.status(401).json({ message: "Invalid Credentials" });
         }
 
     } catch (error) {
-        // Internal server error
         return res.status(500).json({ message: "Internal Server Error" });
     }
 }
 
-
-// user API
+// User API
 const user = async (req, res) => {
-
     try {
         const userData = req.user;
-        return res.status(200).json({ userData })
+        return res.status(200).json({ userData });
     } catch (error) {
         console.log(error);
+        return res.status(500).json({ message: "Internal Server Error" });
     }
 }
 
+// Update User API
 const updateUser = async (req, res) => {
-
     try {
         const userId = req.body.userId;
-
-        const { email, phone } = req.body;
+        const { email, phone, location } = req.body;
 
         const user = await User.findById(userId);
 
@@ -131,6 +120,7 @@ const updateUser = async (req, res) => {
     }
 };
 
+// Upload Profile Picture API
 const uploadProfilePicture = async (req, res) => {
     try {
         const userId = req.body.userId;
@@ -174,9 +164,40 @@ const uploadProfilePicture = async (req, res) => {
     }
 };
 
+// Search functionality using alternatives
+const searchLocation = async (query) => {
+    const url = `https://nominatim.openstreetmap.org/search?q=${query}&format=json&addressdetails=1`;
+    const response = await axios.get(url, {
+        headers: {
+            'User-Agent': 'YourAppName (your-email@example.com)'
+        }
+    });
+    return response.data;
+};
 
+const searchWeb = async (query) => {
+    const url = `https://api.duckduckgo.com/?q=${query}&format=json`;
+    const response = await axios.get(url);
+    return response.data;
+};
 
+const search = async (req, res) => {
+    const query = req.query.query;
+    if (!query) {
+        return res.status(400).json({ error: 'Query parameter is required' });
+    }
 
+    try {
+        const locationResult = await searchLocation(query);
+        const webResult = await searchWeb(query);
 
+        return res.json({
+            location_search: locationResult,
+            web_search: webResult
+        });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+};
 
-module.exports = { register, login, user, updateUser, uploadProfilePicture };
+module.exports = { register, login, user, updateUser, uploadProfilePicture, search };

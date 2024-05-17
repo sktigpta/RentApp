@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../storeing-data/auth";
+import { useAuth } from "../../storeing-data/auth";
 
 const BusinessRegistration = () => {
     const [business, setBusiness] = useState({

@@ -76,7 +76,7 @@ const Login = () => {
     return (<>
         <div className="parent-center">
             <section className="container-z">
-                <div>
+                <div style={{width : "100%"}}>
                     <h2>Welcome back!</h2>
 
                     <form style={{ margin: "1.5em 0" }} onSubmit={handleSubmit}>
@@ -97,7 +97,7 @@ const Login = () => {
                             value={user.password}
                             onChange={handleInput}
                         />
-                        <button style={{ marginTop: "0.5em" }} type="submit">Login</button>
+                        <button style={{ marginTop: "0.5em"}} type="submit">Login</button>
 
 
                     </form>

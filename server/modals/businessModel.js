@@ -1,18 +1,20 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const Category = require('./categoryModel'); // Import Category model
+const Category = require('./categoryModel');
 
 const addressSchema = new Schema({
+    street: { type: String },
     area: { type: String, required: true },
     district: { type: String, required: true },
     postalCode: { type: String, required: true },
-    otherDetails: { type: String }
+    state: { type: String, required: true },
+    country: { type: String, required: true },
 });
 
 const businessSchema = new Schema({
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    businessName: { type: String, required: true },
-    businessPhone: {
+    name: { type: String, required: true },
+    phone: {
         type: String,
         required: true,
         validate: {
@@ -23,9 +25,10 @@ const businessSchema = new Schema({
             message: props => `${props.value} is not a valid phone number!`
         }
     },
-    businessDescription: { type: String, required: true },
-    businessAddress: { type: addressSchema, required: true },
-    businessCategories: [{ type: Schema.Types.ObjectId, ref: 'Category' }], // Reference to Category model
+    email: { type: String, required: true },
+    about: { type: String, required: true },
+    address: { type: addressSchema, required: true },
+    categories: [{ type: Schema.Types.ObjectId, ref: 'Category' }], // Reference to Category model
 }, { timestamps: true });
 
 const Business = mongoose.model('Business', businessSchema);

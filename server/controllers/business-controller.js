@@ -4,32 +4,74 @@ const Category = require('../modals/categoryModel');
 const User = require('../modals/userModel');
 const fs = require('fs');
 
+const getBusinessDetails = async (req, res) => {
+    try {
+        const userId = req.userId;
+
+        const business = await Business.findOne({ userId })
+            .populate('userId', 'username fullname email phone profilePicture')
+            .populate({
+                path: 'categories',
+                select: 'name -_id' // Exclude _id from the populated categories
+            });
+
+        if (!business) {
+            return res.status(400).json({ message: "Business not found" });
+        }
+
+        return res.status(200).json({ business });
+    } catch (error) {
+        console.error("Error fetching business:", error.message, error.stack);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
 const register = async (req, res) => {
     try {
-        const { businessName, businessAddress, businessDescription, businessPhone, businessCategories } = req.body;
+        const { name, address, about, phone, email, categories } = req.body;
         const userId = req.userId;
+        const logoUrl = req.file ? req.file.path : null; // Assuming multer adds 'path' to 'file' object
 
         if (!userId) {
             return res.status(400).json({ message: "User ID is required" });
         }
 
-        // Check if business name already exists
-        const businessExist = await Business.findOne({ businessName });
+        // Check if categories is provided and is an array
+        if (!Array.isArray(categories)) {
+            return res.status(400).json({ message: "Categories should be an array" });
+        }
+
+        const businessExist = await Business.findOne({ name });
         if (businessExist) {
             return res.status(400).json({ message: "Business name already exists" });
         }
 
-        // Create new business
+        // Fetch existing categories based on names
+        const existingCategories = await Category.find({ name: { $in: categories } });
+        const existingCategoryNames = existingCategories.map(category => category.name);
+        const existingCategoryIds = existingCategories.map(category => category._id);
+
+        // Identify missing categories
+        const missingCategories = categories.filter(category => !existingCategoryNames.includes(category));
+
+        // Create missing categories
+        const newCategories = await Category.insertMany(missingCategories.map(name => ({ name })));
+        const newCategoryIds = newCategories.map(category => category._id);
+
+        // Combine existing and new category ObjectIds
+        const allCategoryIds = [...existingCategoryIds, ...newCategoryIds];
+
         const newBusiness = await Business.create({
             userId,
-            businessName,
-            businessPhone,
-            businessAddress,
-            businessDescription,
-            businessCategories
+            name,
+            phone,
+            email,
+            about: about, // Assuming 'about' should be 'about' (lowercase)
+            address,
+            categories: allCategoryIds,
+            logo: logoUrl // Include the logo URL in the business document
         });
 
-        // Update user's isBusiness field to true
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -45,23 +87,37 @@ const register = async (req, res) => {
     }
 };
 
-
-// Controller to upload a product for a business
-const uploadProduct = async (req, res) => {
+const addProduct = async (req, res) => {
     try {
         const { businessId } = req.params;
-        const { name, description, pricePerDay, pricePerWeek, pricePerMonth, categories } = req.body;
+        const { name, description, pricePerDay, pricePerWeek, pricePerMonth } = req.body;
+        
+        // Handle uploaded product image
+        const productImage = req.file ? `/products/${req.file.filename}` : null;
 
-        // Convert category names to corresponding ObjectIds
-        const categoryIds = await Category.find({ name: { $in: categories } }).distinct('_id');
+        // Parse categories from request body
+        const categories = JSON.parse(req.body.categories);
+        const categoriesArray = Array.isArray(categories) ? categories : [categories];
 
-        // Check if all categories were found
-        if (categories.length !== categoryIds.length) {
-            const notFoundCategories = categories.filter(category => !categoryIds.includes(category));
-            return res.status(400).json({ message: `Categories not found: ${notFoundCategories.join(', ')}` });
+        // Find existing categories in the database
+        const existingCategories = await Category.find({ name: { $in: categoriesArray } });
+
+        // Extract existing category names
+        const existingCategoryNames = existingCategories.map(category => category.name);
+
+        // Identify missing categories
+        const missingCategories = categoriesArray.filter(category => !existingCategoryNames.includes(category));
+
+        // Create missing categories
+        for (const categoryName of missingCategories) {
+            const newCategory = await Category.create({ name: categoryName });
+            existingCategories.push(newCategory);
         }
 
-        // Create new product
+        // Extract category IDs
+        const categoryIds = existingCategories.map(category => category._id);
+
+        // Create the product
         const newProduct = await Product.create({
             businessId,
             name,
@@ -69,49 +125,53 @@ const uploadProduct = async (req, res) => {
             pricePerDay,
             pricePerWeek,
             pricePerMonth,
-            categories: categoryIds
+            categories: categoryIds,
+            productImage // Save the image URL in the product document
         });
 
-        return res.status(201).json({ message: "Product uploaded successfully", product: newProduct });
+        return res.status(201).json({ message: 'Product uploaded successfully', product: newProduct });
     } catch (error) {
-        console.error("Error uploading product:", error);
-        return res.status(500).json({ message: "Internal Server Error" });
+        console.error('Error uploading product:', error);
+        return res.status(500).json({ message: 'Internal Server Error' });
     }
 };
 
 
-// Controller to list all products of a business
-const listProducts = async (req, res) => {
+const productList = async (req, res) => {
     try {
         const { businessId } = req.params;
 
-        // Find all products of the business
-        const products = await Product.find({ businessId });
+        // Populate the 'categories' field to include category data
+        const products = await Product.find({ businessId }).populate('categories');
 
-        return res.status(200).json({ products });
+        // Format the products array
+        const formattedProducts = products.map(product => ({
+            ...product.toObject(),
+            categories: product.categories.map(category => ({
+                name: category.name
+            }))
+        }));
+
+        return res.status(200).json({ products: formattedProducts });
     } catch (error) {
         console.error("Error listing products:", error);
         return res.status(500).json({ message: "Internal Server Error" });
     }
 };
 
-// Controller to delete a product of a business
 const deleteProduct = async (req, res) => {
     try {
         const { businessId, productId } = req.params;
 
-        // Find the product by ID
         const product = await Product.findById(productId);
         if (!product) {
             return res.status(404).json({ message: "Product not found" });
         }
 
-        // Check if the product belongs to the business
         if (product.businessId.toString() !== businessId) {
             return res.status(403).json({ message: "Unauthorized access" });
         }
 
-        // Delete the product
         await product.remove();
 
         return res.status(200).json({ message: "Product deleted successfully" });
@@ -121,29 +181,42 @@ const deleteProduct = async (req, res) => {
     }
 };
 
-// Controller to edit a product of a business
 const editProduct = async (req, res) => {
     try {
         const { businessId, productId } = req.params;
         const { name, description, pricePerDay, pricePerWeek, pricePerMonth, categories } = req.body;
+        const imageUrl = req.file ? req.file.path : null; // Assuming multer adds 'path' to 'file' object
 
-        // Find the business by ID
         const business = await Business.findById(businessId);
         if (!business) {
             return res.status(404).json({ message: "Business not found" });
         }
 
-        // Find the product by ID
         let product = await Product.findById(productId);
 
         if (!product) {
             return res.status(404).json({ message: "Product not found" });
         }
 
-        // Check if the product belongs to the business
         if (product.businessId.toString() !== businessId) {
             return res.status(403).json({ message: "Unauthorized access" });
         }
+
+        // Find existing categories in the database
+        const existingCategories = await Category.find({ name: { $in: categories } });
+        const existingCategoryNames = existingCategories.map(category => category.name);
+
+        // Identify missing categories
+        const missingCategories = categories.filter(category => !existingCategoryNames.includes(category));
+
+        // Create missing categories
+        for (const categoryName of missingCategories) {
+            const newCategory = await Category.create({ name: categoryName });
+            existingCategories.push(newCategory);
+        }
+
+        // Extract category IDs
+        const categoryIds = existingCategories.map(category => category._id);
 
         // Update product details
         product.name = name;
@@ -151,9 +224,13 @@ const editProduct = async (req, res) => {
         product.pricePerDay = pricePerDay;
         product.pricePerWeek = pricePerWeek;
         product.pricePerMonth = pricePerMonth;
-        product.categories = categories;
+        product.categories = categoryIds;
 
-        // Save the updated product
+        // Update image URL if a new image was uploaded
+        if (imageUrl) {
+            product.imageUrl = imageUrl;
+        }
+
         await product.save();
 
         return res.status(200).json({ message: "Product updated successfully", product });
@@ -163,4 +240,19 @@ const editProduct = async (req, res) => {
     }
 };
 
-module.exports = { register, uploadProduct, listProducts, deleteProduct, editProduct };
+
+const sendMessage = async (req, res) => {
+    try {
+        const { businessId } = req.params;
+        const { message } = req.body;
+
+        // Process the message logic here
+        // For demonstration, returning success response
+        return res.status(200).json({ message: "Message sent successfully", businessId, message });
+    } catch (error) {
+        console.error("Error sending message:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
+module.exports = { register, addProduct, productList, deleteProduct, editProduct, getBusinessDetails, sendMessage };

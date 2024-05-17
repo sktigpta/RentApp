@@ -64,10 +64,18 @@ const Navbar = () => {
                     </div>
                     <h2 style={{ fontSize: "1.2em" }}>{user.fullname}</h2>
                     <p style={{ opacity: "0.4", fontSize: "1em", marginBottom: "1em" }}>@{user.username}</p>
-                    <Link className="li proLi" to="/user" onClick={closeProfileMenu}>Your Account</Link>
+                    <Link className="li proLi" to="/profile" onClick={closeProfileMenu}>Your Account</Link>
                     <Link className="li proLi" to="/contact" onClick={closeProfileMenu}>Write Us</Link>
                     <Link className="li proLi" to="/notifications" onClick={closeProfileMenu}>Notifications</Link>
-                    <Link className="li proLi" to="/register-as-business" onClick={closeProfileMenu}>Register as Business?</Link>
+                    {user.isBusiness === true ?
+                      <>
+                        <Link className="li proLi" to="/dashboard" onClick={closeProfileMenu}>Dashboard</Link>
+                      </>
+                      :
+                      <>
+                        <Link className="li proLi" to="/register-as-business" onClick={closeProfileMenu}>Register as Business?</Link>
+                      </>
+                    }
 
                     {user.isAdmin === true && ( // Check if user is admin
                       <Link className="li proLi" to="/admin" onClick={closeProfileMenu}> Admin Panel</Link>
