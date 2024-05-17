@@ -37,7 +37,7 @@ userSchema.pre('save', async function (next) {
 
 
 //jwt webtoken Authentication or Authorisation
-userSchema.methods.genetateToken = async function () {
+userSchema.methods.generateToken = async function () {
   try {
     return jwt.sign({
 
