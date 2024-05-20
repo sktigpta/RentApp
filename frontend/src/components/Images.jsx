@@ -1,10 +1,1 @@
 
-export const ProductImage  = () => {
-
-
-    return (
-        <>
-            
-        </>
-    )
-};

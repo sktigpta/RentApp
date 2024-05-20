@@ -74,14 +74,13 @@ const Login = () => {
 
 
     return (<>
-        <div className="parent-center">
-            <section className="container-z">
-                <div style={{width : "100%"}}>
+        <section>
+            <div className="container-center">
+                <div className="container">
                     <h2>Welcome back!</h2>
+                    <form className="authform" onSubmit={handleSubmit}>
 
-                    <form style={{ margin: "1.5em 0" }} onSubmit={handleSubmit}>
-
-                        <input type="text"
+                        <input className="authInput" type="text"
                             name="email"
                             placeholder="Email Address"
                             autoComplete="off"
@@ -90,24 +89,25 @@ const Login = () => {
                             autoCapitalize="no"
                         />
 
-                        <input type="password"
+                        <input className="authInput" type="password"
                             name="password"
                             placeholder="Password"
                             autoComplete=" off"
                             value={user.password}
                             onChange={handleInput}
                         />
-                        <button style={{ marginTop: "0.5em"}} type="submit">Login</button>
 
+                        <button style={{ marginTop: "0.5em", width: "100%" }} type="submit">Login</button>
 
                     </form>
+                    <div style={{ display: "flex", flexDirection: "row", gap: "0.5em"}}>
+                        <p> Don't have an account</p>
+                        <p className="bld"><Link className="li" to="/register">Register</Link></p>
+                    </div>
                 </div>
-                <div style={{ display: "flex", flexDirection: "row", gap: "0.5em", }}>
-                    <p> Don't have an account</p>
-                    <p className="bld"><Link className="li" to="/register">Register</Link></p>
-                </div>
-            </section>
-        </div>
+            </div>
+
+        </section>
     </>
     )
 }

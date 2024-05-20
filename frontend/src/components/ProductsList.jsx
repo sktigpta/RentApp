@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../storeing-data/auth";
+import addProduct from "../assets/add-product.png";
 
-const ProductsList = () => {
+
+
+export const ProductsList = () => {
     const { business, authorizationToken } = useAuth();
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -48,8 +51,17 @@ const ProductsList = () => {
             {products.length > 0 ? (
                 products.map((product) => (
                     <div className="list-div" key={product._id}>
+                        {product.productImage ?
+                            <>
+                                <img src={`${sourceLink}${product.productImage}`} />
+                            </>
+                            :
+                            <>
+                                <img src={addProduct} alt="" />
+                            </>
+
+                        }
                         <p className="li-name">{product.name}</p>
-                        <img style={{ height: "100%" }} src={`${sourceLink}${product.productImage}`} />
                     </div>
                 ))
             ) : (
@@ -61,4 +73,3 @@ const ProductsList = () => {
     );
 };
 
-export default ProductsList;

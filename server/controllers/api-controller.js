@@ -64,18 +64,25 @@ const getBusinessById = async (req, res) => {
 
 const getCategoryById = async (req, res) => {
     try {
-        const categoryId = req.params.id; // Get the category ID from the request params
+        const categoryId = req.params.id;
 
-        // Find the category by ID in the database
         const category = await Category.findById(categoryId);
 
-        // Check if the category exists
         if (!category) {
             return res.status(404).json({ message: 'Category not found' });
         }
 
-        // If the category exists, send it in the response
-        res.json(category);
+        // Check for the category in products
+        const products = await Product.find({ categories: categoryId }).populate('categories');
+
+        // Check for the category in businesses
+        const businesses = await Business.find({ categories: categoryId }).populate('categories');
+
+        res.json({
+            category,
+            products,
+            businesses
+        });
     } catch (error) {
         console.error('Error fetching category:', error);
         res.status(500).json({ message: 'Internal Server Error' });

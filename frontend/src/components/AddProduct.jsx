@@ -1,6 +1,8 @@
 import React, { useState, useRef } from 'react';
 import { useAuth } from '../storeing-data/auth';
 import { useNavigate } from 'react-router-dom';
+import addProduct from "../assets/add-product.png";
+
 
 function AddProductForm() {
     const { business, authorizationToken } = useAuth();
@@ -83,8 +85,9 @@ function AddProductForm() {
                                 {imagePreview ? (
                                     <img src={imagePreview} alt="Selected Product" />
                                 ) : (
-                                    <img src="https://img.freepik.com/free-photo/white-offroader-jeep-parking_114579-4007.jpg?t=st=1715895369~exp=1715898969~hmac=8991a5224c49c8fa1386ad60227922a29103d646c153503a83fa833d4d03ff67&w=1060" alt="Business" />
+                                    <img src={addProduct} />
                                 )}
+                                <p className='clr-gray' style={{position:"absolute" , zIndex:"2", top:"0.5em"}}>Click to upload photo</p>
                             </div>
                             <div style={{ marginTop: "0.5em" }}>
                                 {categories.length > 0 && (

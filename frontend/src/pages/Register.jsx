@@ -61,12 +61,13 @@ const Register = () => {
 
 
     return (<>
-        <div className="parent-center">
-            <section className="container-z">
-                <div>
+        <section>
+            <div className="container-center">
+                <div className="container">
                     <h2>Register here</h2>
-                    <form style={{ margin: "1.5em 0" }} onSubmit={handleSubmit}>
-                        <input type="text"
+
+                    <form className="authform" onSubmit={handleSubmit}>
+                        <input className="authInput" type="text"
                             name="fullname"
                             placeholder="Full Name"
                             autoComplete="off"
@@ -75,7 +76,7 @@ const Register = () => {
                             required="true"
                         />
 
-                        <input type="username"
+                        <input className="authInput" type="username"
                             name="username"
                             placeholder="Username"
                             autoComplete="off"
@@ -84,7 +85,7 @@ const Register = () => {
                             required="true"
                         />
 
-                        <input type="email"
+                        <input className="authInput" type="email"
                             name="email"
                             placeholder="Email Address"
                             autoComplete="off"
@@ -93,7 +94,7 @@ const Register = () => {
                             required="true"
                         />
 
-                        <input type="text"
+                        <input className="authInput" type="text"
                             name="phone"
                             placeholder="Phone Number"
                             autoComplete="off"
@@ -102,7 +103,7 @@ const Register = () => {
                             required="true"
                         />
 
-                        <input type="password"
+                        <input className="authInput" type="password"
                             name="password"
                             placeholder="Password"
                             autoComplete=" off"
@@ -110,16 +111,16 @@ const Register = () => {
                             onChange={handleInput}
                             required="true"
                         />
-                        <button style={{ marginTop: "0.5em" }} type="submit">Register</button>
+                        <button style={{ marginTop: "0.5em", width: "100%" }} type="submit">Register</button>
 
                     </form>
+                    <div style={{ display: "flex", flexDirection: "row", gap: "0.5em"}}>
+                        <p>Already have an account</p>
+                        <p className="bld"><Link className="li" to="/login">Login</Link></p>
+                    </div>
                 </div>
-                <div style={{ display: "flex", flexDirection: "row", gap: "0.5em" }}>
-                    <p>Already have an account</p>
-                    <p className="bld"><Link className="li" to="/login">Login</Link></p>
-                </div>
-            </section >
-        </div>
+            </div>
+        </section >
     </>
     )
 }

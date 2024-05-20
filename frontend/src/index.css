@@ -1,216 +1,45 @@
-.hero {
-  border-radius: 0.5em;
-  width: 100%;
+.name {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-family: "Poppins", sans-serif;
+    align-items: center;
+
+    width: 100%;
+    height: 8vh;
+    position: relative;
 }
 
-.productImage {
-  background-color: #fff;
-  width: 100%;
-  height: 20em;
-  display: flex;
-  border-radius: 0.5em;
-  overflow: hidden;
-  box-shadow: rgba(99, 99, 99, 0.1) 0px 2px 8px 0px;
+.details {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - (8vh + 4em));
+    gap: 0.5em;
 }
 
-.productImage img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
+.Information{
+    width: 30%;
+}
+.Information img{
+    width: 100%;
 }
 
-.productImage:hover img {
-  transform: scale(1.1);
-  /* Increase the size by 10% on hover */
+.items-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: calc(100vh - (8vh + 4em));
+    gap: 0.5em;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-
-.productSection {
-  width: calc(100% - (30em + 2em));
-  height: calc(100vh - 5em);
-  margin: 0 0 0 2em;
-  display: flex;
-  flex-direction: column;
-  position: relative;
+.items-list .list-div {
+    height: 12em;
+    position: relative;
+    margin-bottom: 2.5em;
 }
 
-.productDetails {
-  height: calc(100vh - 10em);
-  overflow: hidden;
-  overflow-y: auto;
-  gap: 0.5em;
-}
-
-.productDetails::-webkit-scrollbar {
-  display: none;
-}
-
-
-
-.review-container {
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 20px;
-  margin-top: 20px;
-  background-color: #f9f9f9;
-}
-
-.review-container h2 {
-  font-size: 1.5em;
-  margin-bottom: 10px;
-}
-
-.review {
-  margin-bottom: 15px;
-}
-
-.review .user {
-  font-weight: bold;
-}
-
-.review .rating {
-  color: #ffc107;
-  /* Yellow color for ratings */
-}
-
-.review .comment {
-  margin-top: 5px;
-}
-
-.productBooking {
-  height: 5em;
-  align-items: center;
-  justify-content: space-between;
-
-}
-
-.productDetails .container {
-  width: calc(100% / 3);
-  line-height: 0.8em;
-  font-size: 0.9em;
-}
-
-.productDetails .container:hover {
-  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
-}
-
-.productDetails .container h3 {
-  font-size: 1em;
-  margin-bottom: 0.5em;
-}
-
-.priceContainer {
-  background: #c9c6c6;
-  border-radius: 0.5em;
-  padding: 1em;
-}
-
-.upper {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  height: 4em;
-}
-
-.information {
-  width: 100%;
-  height: 10em;
-  display: flex;
-  flex-direction: column;
-}
-
-.business-info {
-  width: 32%;
-  height: calc(100vh - 12em);
-  background-color: #fff;
-  border-radius: 1em;
-  box-shadow: rgba(149, 157, 165, 0.027) 0px 8px 24px;
-  padding: 1em;
-}
-
-.list {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  height: 78vh;
-  flex-wrap: wrap;
-  overflow-x: hidden;
-  overflow-y: auto;
-  justify-content: flex-start;
-}
-
-.list::-webkit-scrollbar {
-  display: none;
-}
-
-
-.list-div {
-  height: 15em;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #fff;
-  border-radius: 0.3em;
-  box-shadow: rgba(149, 157, 165, 0.027) 0px 8px 24px;
-  grid-area: 0.5em;
-  transition: filter 0.3s ease;
-
-}
-
-.list-div img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: filter 0.3s ease;
-}
-
-.list-div::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(#00000000, black);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: 1;
-}
-
-.list-div:hover::before {
-  opacity: 0.8;
-}
-
-.list-div:hover img {
-  filter: grayscale(100%);
-}
-
-.li-name {
-  position: absolute;
-  color: #fff;
-  border-radius: 0.3em;
-  opacity: 0;
-  transition: opacity 0.3s ease, bottom 0.3s ease;
-  z-index: 2;
-  font-size: 2em;
-  line-height: 1em;
-  padding: 0.5em;
-}
-
-.list-div:hover .li-name {
-  opacity: 1;
-  bottom: 0em;
-  
-}
-
-.pricing-Inpt {
-  display: flex;
-  flex-direction: row;
-  gap: 0.5em;
-  justify-content: space-between;
+.items-list .list-div img {
+    height: 100%;
 }

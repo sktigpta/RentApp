@@ -11,15 +11,15 @@ const Home = () => {
   const handleInputChange = async (event) => {
     const value = event.target.value;
     setSearchTerm(value); // Update the search term state
-  
+
     // Make an API call to get suggestions
     if (value.trim() !== "") {
       try {
         const response = await fetch(`http://localhost:2005/api/search/?query=${value}`);
         const data = await response.json();
-  
+
         console.log("Data received from API:", data); // Log the data received from the API
-  
+
         // Map over the suggestions and add a type property based on the suggestion
         const formattedSuggestions = data.suggestions.map((suggestion) => {
           if (suggestion.type === "product") {
@@ -33,10 +33,10 @@ const Home = () => {
             return null;
           }
         });
-  
+
         // Filter out null values (if any)
         const validSuggestions = formattedSuggestions.filter((suggestion) => suggestion !== null);
-  
+
         setSuggestions(validSuggestions);
       } catch (error) {
         console.error("Error fetching suggestions:", error);
@@ -46,7 +46,7 @@ const Home = () => {
       setSuggestions([]); // Clear suggestions if input is empty
     }
   };
-  
+
 
   const handleSuggestionClick = (suggestion) => {
     // Navigate based on the type of suggestion
@@ -58,7 +58,7 @@ const Home = () => {
         navigate(`/business/${suggestion._id}`);
         break;
       case "category":
-        navigate(`/category/${suggestion.name}`);
+        navigate(`/category/${suggestion._id}`);
         break;
       default:
         break;
@@ -66,32 +66,36 @@ const Home = () => {
   };
 
   return (
-    <div className="hero">
-      <div className="hero-home">
-        <input
-          type="text"
-          className="hero-input"
-          placeholder="Search for Items, events, categories and more..."
-          value={searchTerm}
-          onChange={handleInputChange}
-        />
-        {/* Display auto-suggestions */}
-        {suggestions.length > 0 && (
-          <div className="suggestions">
-            {suggestions.map((suggestion, index) => (
-              <div
-                key={index}
-                className="suggestion-item"
-                onClick={() => handleSuggestionClick(suggestion)} // Handle click event
-              >
-                {/* Render suggestion text based on type */}
-                {renderSuggestionText(suggestion)}
-              </div>
-            ))}
+    <>
+      <section>
+        <div className="hero">
+          <div className="hero-card">
+            <input
+              type="text"
+              className="search"
+              placeholder="Search for Items, events, categories and more..."
+              value={searchTerm}
+              onChange={handleInputChange}
+            />
+          {/* Display auto-suggestions */}
+          {suggestions.length > 0 && (
+            <div className="suggestions">
+              {suggestions.map((suggestion, index) => (
+                <div
+                  key={index}
+                  className="suggestion-item"
+                  onClick={() => handleSuggestionClick(suggestion)} // Handle click event
+                  >
+                  {/* Render suggestion text based on type */}
+                  {renderSuggestionText(suggestion)}
+                </div>
+              ))}
+            </div>
+          )}
           </div>
-        )}
-      </div>
-    </div>
+        </div>
+      </section>
+    </>
   );
 };
 
@@ -101,7 +105,7 @@ const renderSuggestionText = (suggestion) => {
     case "product":
       return suggestion.name || suggestion.description;
     case "business":
-      return suggestion.name || suggestion.about;
+      return suggestion.name || suggestion.about || suggestion.address;
     case "category":
       return suggestion.name;
     default:

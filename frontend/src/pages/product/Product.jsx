@@ -1,91 +1,90 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import addProduct from "../../assets/add-product.png";
 
-export const Product = () => {
-    const [reviews, setReviews] = React.useState([
-        { user: 'John Doe', rating: 4, comment: 'Great product! I\'m very satisfied with my purchase.' },
-        { user: 'Jane Smith', rating: 4, comment: 'Excellent quality and fast delivery.' }
-        // Add more reviews as needed
-    ]);
 
-    const calculateAverageRating = () => {
-        const totalRatings = reviews.length;
-        if (totalRatings === 0) return 0;
+const ProductPage = () => {
+  const { productId } = useParams();
+  const [product, setProduct] = useState(null);
 
-        const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
-        return sum / totalRatings;
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await fetch(`http://localhost:2005/api/products/${productId}`);
+        const data = await response.json();
+        setProduct(data);
+      } catch (error) {
+        console.error('Error fetching product:', error);
+      }
     };
 
-    const renderStars = (rating) => {
-        const filledStars = Math.floor(rating);
-        const hasHalfStar = rating % 1 !== 0;
+    fetchProduct();
+  }, [productId]);
 
-        const stars = [];
-        for (let i = 0; i < 5; i++) {
-            if (i < filledStars) {
-                stars.push(<span key={i} style={{ color: "#ffc107" }}>&#9733;</span>);
-            } else if (hasHalfStar && i === filledStars) {
-                stars.push(<span key={i} style={{ color: "#ffc107" }}>&#9734;</span>);
-            } else {
-                stars.push(<span key={i}>&#9734;</span>);
-            }
-        }
-        return stars;
-    };
+  if (!product) {
+    return <div>Loading...</div>;
+  }
 
-    return (
-        <>
-            <div style={{ width: "100%" }} className="hero">
-                <section className='w-100'>
-                    <div className="d-clmn">
-                        <div className="productImage">
-                            <img src="https://img.freepik.com/free-photo/white-offroader-jeep-parking_114579-4007.jpg?t=st=1715895369~exp=1715898969~hmac=8991a5224c49c8fa1386ad60227922a29103d646c153503a83fa833d4d03ff67&w=1060" alt="" />
-                        </div>
-                        <div className='d-row priceContainer'>
+  console.log(product);
 
-                        </div>
-                    </div>
-                    <div className="productSection">
-                        <div className='d-clmn productDetails'>
-                            <h1>Product Name</h1>
-                            <p className="clr-gray">Lorem ipsum dolor sit amet consectetur adipisicing elit. Error ipsam blanditiis laboriosam, deserunt fuga, ipsa perferendis facere doloribus esse deleniti distinctio quod laborum facilis? Impedit, eaque at? Alias, debitis id. Qui, recusandae, temporibus voluptate reiciendis explicabo ipsum animi officia exercitationem minus eos earum dolores dolorum!</p>
+  return (
+    <>
+      <section>
+        <div className="name">
+          <h1>{product.name}</h1>
+        </div>
 
-                            <p className="clr-gray">Location here</p>
 
-                            <h2>Ratings and reviews</h2>
+        <div style={{ marginTop: "0.5em" }} className="d-row spc-between">
+          <div className="Information">
+            <p style={{ minHeight: "3em", maxHeight: "4em" }} className='clr-gray'>{product.description}</p>
 
-                            <div className="container">
-                                <div className="d-clmn">
-                                    <div>{calculateAverageRating().toFixed(1)}</div>
-                                    <div className="stars">
-                                        {renderStars(calculateAverageRating())}
-                                    </div>
-                                </div>
-                            </div>
+            <div style={{ gap: "0.5em" }} className="d-clmn">
+              <div className="container d-clmn">
 
-                            <div className="container d-clmn">
-                                {reviews.map((review, index) => (
-                                    <div key={index} className="review">
-                                        <div className="user">{review.user}</div>
-                                        <div className="rating">{renderStars(review.rating)}</div>
-                                        <div className="comment">{review.comment}</div>
-                                    </div>
-                                ))}
-                            </div>
 
-                            <div className="d-clmn">
-                                <h2>Business policies</h2>
-                            </div>
-                        </div>
-                        <div className="d-row productBooking">
-                            <h2 style={{ fontSize: "1.5em" }}>Book call</h2>
-                            <div>
-                                <button>Book Now</button>
-                            </div>
-                        </div>
-                    </div>
+                {
+                  product.productImage ? (
+                    <img src={productImage} alt="Selected Product" />
+                  ) : (
+                    <img src={addProduct} />
+                  )}
 
-                </section>
+
+              </div>
+              <div className="container d-row">
+
+                <h3>From : </h3>
+                <h1>{product.pricePerDay}</h1>
+
+              </div>
+
+              {product.categories &&
+                product.categories.map((category, index) => (
+                  < div className="container d-clmn">
+                    <div key={index}>{category}</div>
+                  </div>
+                ))
+              }
             </div>
-        </>
-    );
+
+          </div>
+
+
+          <div style={{ width: "62%" }} className="d-clmn">
+            <h2> Products Details</h2>
+            <div className="items-list">
+
+
+
+            </div>
+          </div>
+        </div>
+
+      </section >
+
+    </>
+  );
 };
+
+export default ProductPage;

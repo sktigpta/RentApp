@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import ProductsList from "../../components/ProductsList";
 import { useAuth } from "../../storeing-data/auth"
+import { ProductsList } from "../../components/ProductsList";
 
 export const Dashboard = () => {
     const { business } = useAuth();
@@ -13,15 +13,15 @@ export const Dashboard = () => {
     return (
         <>
 
-            <section className="d-clmn">
-                <div className="upper">
+            <section>
+                <div className="name">
                     <h1>{business.name}</h1>
                     <Link to='/add-product'><button>Add Product</button></Link>
                 </div>
-                <div className="information">
+                <div className="details">
 
                     <div style={{ marginTop: "0.5em" }} className="d-row spc-between">
-                        <div className="business-info">
+                        <div className="Information">
                             <p style={{ minHeight: "3em", maxHeight: "4em" }} className='clr-gray'>{business.about}</p>
 
                             <div style={{ gap: "0.5em" }} className="d-clmn">
@@ -56,7 +56,7 @@ export const Dashboard = () => {
 
                         <div style={{ width: "62%" }} className="d-clmn">
                             <h2> Products</h2>
-                            <div className="list">
+                            <div className="items-list">
                                 <ProductsList />
                             </div>
                         </div>

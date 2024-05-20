@@ -6,8 +6,10 @@ import { Logout } from "../pages/Logout"
 import BusinessRegistration from "../pages/Business/BusinessRegistration"
 import UserProfile from "../pages/UserProfile"
 import { Dashboard } from "../pages/Business/Dashboard"
-import { Product } from "../pages/product/Product"
 import AddProductForm from "./AddProduct"
+import ProductPage from "../pages/product/Product"
+import BusinessPage from "../pages/Business/BusinessPage"
+import CategoriesPage from "../pages/CategoriesPage"
 
 export const PageRoutes = () => {
     return (
@@ -21,8 +23,11 @@ export const PageRoutes = () => {
                     <Route path="/register-as-business" element={<BusinessRegistration />} />
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/profile" element={<UserProfile />} />
-                    <Route path="/product-page" element={<Product />} />
                     <Route path="/add-product" element={<AddProductForm />} />
+
+                    <Route path="/product/:productId" element={<ProductPage/>} />
+                    <Route path="/category/:categoryName" element={<CategoriesPage />} />
+                    <Route path="/business/:businessId" element={<BusinessPage />} />
                 </Routes>
             </div>
         </>
